@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum CandidateType {
+  FRESHER
+  EXPERIENCED
+}
+
+enum CandidateStatus {
+  NEW
+  UNDER_REVIEW
+  CONTACTED
+  PREPARATION
+  REFERRAL_REQUESTED
+  REFERRAL_ASSISTED
+  COMPLETED
+}
+
+enum ReferralStatus {
+  PENDING
+  UNDER_REVIEW
+  REFERRED
+  NOT_ELIGIBLE
+}
+
+enum ContactStatus {
+  UNREAD
+  READ
+  RESPONDED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Candidate {
+  id                 Int             @id @default(autoincrement())
+  name               String
+  email              String
+  phone              String
+  candidateType      CandidateType   @default(FRESHER)
+  yearsOfExperience  Decimal         @default(0.0) @db.Decimal(4, 1)
+  currentRole        String?
+  targetRole         String
+  primarySkills      String          @db.Text
+  currentCtc         String?
+  expectedCtc        String?
+  noticePeriod       String?
+  currentLocation    String?
+  preferredLocation  String?
+  requiredService    String
+  resumeUrl          String?         @db.Text
+  resumeOriginalName String?
+  linkedInUrl        String?         @db.Text
+  message            String?         @db.Text
+  status             CandidateStatus @default(NEW)
+  adminNotes         String?         @db.Text
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  referralRequests   ReferralRequest[]
+
+  @@index([email])
+  @@index([candidateType])
+  @@index([status])
+  @@map("candidates")
+}
+
+model ReferralRequest {
+  id              Int            @id @default(autoincrement())
+  candidateId     Int?
+  candidate       Candidate?     @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+  candidateName   String
+  candidateEmail  String
+  candidatePhone  String
+  currentCompany  String?
+  targetCompany   String
+  roleTitle       String
+  experienceYears Decimal        @default(0.0) @db.Decimal(4, 1)
+  linkedInUrl     String?        @db.Text
+  resumeUrl       String?        @db.Text
+  status          ReferralStatus @default(PENDING)
+  notes           String?        @db.Text
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([candidateEmail])
+  @@index([targetCompany])
+  @@index([status])
+  @@map("referral_requests")
+}
+
+model ContactRequest {
+  id        Int           @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String        @db.Text
+  status    ContactStatus @default(UNREAD)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@map("contact_requests")
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  category    String   // Freshers, Experienced, Referral, Special
+  description String   @db.Text
+  icon        String?  // icon name identifier
+  features    String   @db.Text // JSON or comma-separated string
+  pricing     String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("services")
+}
+
+model Testimonial {
+  id            Int           @id @default(autoincrement())
+  name          String
+  role          String
+  company       String
+  quote         String        @db.Text
+  rating        Int           @default(5)
+  avatarUrl     String?
+  candidateType CandidateType @default(FRESHER)
+  active        Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("testimonials")
+}
