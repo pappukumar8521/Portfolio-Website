@@ -16,3 +16,4 @@ router.get('/', protectAdmin, getContacts);
 router.patch('/:id', protectAdmin, updateContact);
 
 export default router;
+

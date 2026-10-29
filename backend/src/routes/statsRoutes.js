@@ -8,3 +8,4 @@ router.get('/stats', protectAdmin, getDashboardStats);
 router.get('/public', getPublicData);
 
 export default router;
+

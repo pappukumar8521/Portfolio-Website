@@ -105,3 +105,4 @@ export default function HowItWorks({ onOpenAssessment }) {
     </section>
   );
 }
+

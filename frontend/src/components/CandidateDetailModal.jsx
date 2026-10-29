@@ -285,3 +285,4 @@ export default function CandidateDetailModal({ candidate, onClose, onUpdated }) 
     </div>
   );
 }
+

@@ -21,3 +21,4 @@ router.patch('/:id', protectAdmin, updateCandidate);
 router.delete('/:id', protectAdmin, deleteCandidate);
 
 export default router;
+

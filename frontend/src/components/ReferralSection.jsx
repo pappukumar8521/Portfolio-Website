@@ -154,3 +154,4 @@ export default function ReferralSection({ onRequestReferral }) {
     </section>
   );
 }
+

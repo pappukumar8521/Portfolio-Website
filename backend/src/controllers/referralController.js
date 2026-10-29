@@ -125,3 +125,4 @@ export const updateReferral = async (req, res, next) => {
     next(error);
   }
 };
+

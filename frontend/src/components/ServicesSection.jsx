@@ -160,3 +160,4 @@ export default function ServicesSection({ onOpenAssessment }) {
     </section>
   );
 }
+

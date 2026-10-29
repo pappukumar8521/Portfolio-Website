@@ -11,3 +11,4 @@
     "install:frontend": "npm --prefix frontend install"
   }
 }
+

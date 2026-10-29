@@ -17,3 +17,4 @@ router.get('/', protectAdmin, getReferrals);
 router.patch('/:id', protectAdmin, updateReferral);
 
 export default router;
+

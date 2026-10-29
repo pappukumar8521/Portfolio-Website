@@ -96,3 +96,4 @@ export default function Hero({ onOpenAssessment, onGetStarted }) {
     </section>
   );
 }
+

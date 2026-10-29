@@ -154,3 +154,4 @@ model Testimonial {
 
   @@map("testimonials")
 }
+

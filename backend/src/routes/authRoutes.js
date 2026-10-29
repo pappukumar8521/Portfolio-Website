@@ -8,3 +8,4 @@ router.post('/login', loginAdmin);
 router.get('/me', protectAdmin, getMe);
 
 export default router;
+

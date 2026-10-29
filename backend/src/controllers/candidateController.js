@@ -240,3 +240,4 @@ export const deleteCandidate = async (req, res, next) => {
     next(error);
   }
 };
+

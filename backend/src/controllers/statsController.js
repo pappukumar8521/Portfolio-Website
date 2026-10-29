@@ -85,3 +85,4 @@ export const getPublicData = async (req, res, next) => {
     next(error);
   }
 };
+

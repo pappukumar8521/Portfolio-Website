@@ -81,3 +81,4 @@ The frontend will be accessible at `http://localhost:5173` and backend at `http:
 
 ## ⚖️ Business Disclaimer
 *Referral assistance may be available based on role, eligibility, openings, and network availability. Referral assistance does not guarantee interview selection or employment. Final hiring decisions are made solely by the respective employer. HireMitra does not claim official partnerships with any named third-party companies.*
+
