@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: hiremitra-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: ADMIN_DEFAULT_EMAIL
+        value: admin@hiremitra.com
+      - key: ADMIN_DEFAULT_PASSWORD
+        value: Admin@HireMitra2025
+      - key: ADMIN_DEFAULT_NAME
+        value: HireMitra Administrator
+
