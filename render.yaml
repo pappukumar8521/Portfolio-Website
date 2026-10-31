@@ -8,9 +8,9 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        sync: false
+        value: "mysql://2zgbeGvsHWGtgpE.root:69GJOVgNMjcdbgDp@gateway01.ap-northeast-1.prod.aws.tidbcloud.com:4000/test?sslaccept=strict"
       - key: JWT_SECRET
-        generateValue: true
+        value: "hiremitra_jwt_secret_key_prod_2025_987654321"
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CORS_ORIGIN
