@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 import authRoutes from './routes/authRoutes.js';
@@ -19,7 +20,8 @@ const app = express();
 
 // Security Middleware
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: false // Allow inline scripts/fonts in production bundle
 }));
 
 // CORS Configuration
@@ -38,7 +40,7 @@ app.use(cors({
       return callback(null, true);
     }
     // Allow any vercel domain or custom preview
-    if (origin.endsWith('.vercel.app')) {
+    if (origin.endsWith('.vercel.app') || origin.endsWith('.onrender.com') || origin.endsWith('.railway.app')) {
       return callback(null, true);
     }
     return callback(null, true); // Permissive for production deployment flexibility
@@ -68,7 +70,13 @@ app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 // Static file serving for uploads
 app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')));
 
-// Root & Health Check
+// Serve frontend build assets if available
+const frontendDist = path.resolve(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+}
+
+// Health Check API
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
@@ -78,17 +86,25 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.get('/', (req, res) => {
-  res.send('HireMitra API is running smoothly.');
-});
-
-// Mount Routes
+// Mount API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', authRoutes); // Allows POST /api/admin/login as specified in prompt
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/referrals', referralRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api', statsRoutes); // /api/stats, /api/public
+
+// SPA Client-side routing fallback (serves React App for all non-API routes)
+app.get('*', (req, res, next) => {
+  if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/uploads')) {
+    return next();
+  }
+  const indexPath = path.resolve(frontendDist, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  res.send('HireMitra API is running smoothly.');
+});
 
 // 404 & Error Handling
 app.use(notFound);
