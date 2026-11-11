@@ -4,9 +4,11 @@ const defaultCloudUrl = "mysql://2zgbeGvsHWGtgpE.root:69GJOVgNMjcdbgDp@gateway01
 
 let dbUrl = process.env.DATABASE_URL;
 
-// If DATABASE_URL is missing, or was accidentally cut off/truncated when pasted into Render UI
-if (!dbUrl || dbUrl.includes('gateway01.ap-northeast-:') || (!dbUrl.includes(':4000') && dbUrl.includes('tidbcloud'))) {
-  console.log('ℹ️ Using verified TiDB Cloud database connection string.');
+// Ensure database URL is complete. If it's missing or got truncated/cut-off in Render:
+const isValid = dbUrl && (dbUrl.includes('prod.aws.tidbcloud.com:4000') || dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1'));
+
+if (!isValid) {
+  console.log('ℹ️ Using verified full TiDB Cloud connection string.');
   dbUrl = defaultCloudUrl;
 }
 
